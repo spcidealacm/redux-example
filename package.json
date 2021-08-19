@@ -1,0 +1,16 @@
+{
+  "name": "redux-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/spcidealacm/redux-example.git",
+  "scripts": {
+    "start": "webpack-dev-server --config ./webpack.config.js"
+  },
+  "author": "Tianyang Guan",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.0.0"
+  }
+}
