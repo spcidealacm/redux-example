@@ -1,33 +1,38 @@
 import { createStore } from 'redux'
-let recordState;
 const initialState = [
   {
     bookId: 0,
-    bookName: "<<Test Book>>"
+    bookName: "Test Book"
   }
 ]
-const reducer = function (state = initialState, action) {
-  recordState = state;
-  switch (action.type) {
+const reducer = function(state = initialState, action){
+  let newState;
+  switch(action.type) {
     case "addBook":
-      return [
+      newState = [
         ...state,
         {
           bookId: action.info.bookId,
-          bookName: `<<${action.info.bookName}>>`
+          bookName: action.info.bookName
         }
       ]
+      console.log(newState);
+      return newState;
     case "delBook":
-      return state.filter(book => book.bookId != action.info.bookId)
+      newState = state.filter(book => book.bookId != action.info.bookId)
+      console.log(newState);
+      return newState
+      break;
     default:
       break;
   }
 }
 const store = createStore(reducer)
 
+const root = document.getElementById('app');
 const addBook = document.getElementById('addBook');
 const delBook = document.getElementById('delBook');
-const bookList = document.getElementById('bookList');
+const booklist = document.getElementById('bookList');
 
 const addBookBtn = document.createElement('button')
 const bookNameInput = document.createElement('input')
@@ -45,9 +50,9 @@ addBook.appendChild(addBookBtn);
 delBook.appendChild(bookIdInput);
 delBook.appendChild(delBookBtn);
 
-function* generateID() {
-  let id = 1;
-  while (true) {
+function* generateID(){
+  let id=1;
+  while(true){
     yield id++;
   }
 }
@@ -55,9 +60,9 @@ function* generateID() {
 const generateId = generateID();
 const genBookId = () => generateId.next().value;
 
-function addBookFn() {
+function addBookFn(){
   const bookName = bookNameInput.value;
-  if (bookName) {
+  if(bookName){
     const bookId = genBookId();
     bookNameInput.value = "";
     const action = {
@@ -68,43 +73,22 @@ function addBookFn() {
       }
     }
     store.dispatch(action)
-  } else {
+  }else{
     console.log("input bookname")
   }
 }
-function delBookFn() {
+function delBookFn(){
   const bookId = bookIdInput.value;
-  if (bookId) {
+  if(bookId){
     bookIdInput.value = "";
     const action = {
       type: "delBook",
-      info: {
+      info:{
         bookId: bookId
       }
     }
     store.dispatch(action)
-  } else {
+  }else{
     console.log("input bookid")
   }
-}
-
-const showState = store.subscribe(() => {
-  console.log("New", store.getState());
-  console.log("Old", recordState);
-})
-
-const showNewList = store.subscribe(() => {
-  const currentState = store.getState()
-  if (currentState.length !== recordState.length) {
-    bookList.innerText = "";
-    currentState.forEach(element => {
-      bookList.appendChild(creatBookList(element))
-    });
-  }
-})
-
-function creatBookList(info) {
-  const element = document.createElement('li')
-  element.innerText = `BookID: ${info.bookId} BookName: ${info.bookName}`
-  return element;
 }
